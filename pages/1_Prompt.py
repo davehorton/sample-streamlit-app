@@ -1,7 +1,7 @@
 
 import streamlit as st
 
-st.set_page_config(page_title="Prompt", layout="wide", page_icon="📄")
+st.set_page_config(page_title="Prompt", page_icon="📄")
 st.header('The prompt')
 
 # Using the multiline string as the default value in a text_area

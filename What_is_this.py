@@ -1,44 +1,35 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="LLM Conversational Response Classifier",
-    layout='wide'
-)
+    page_title="LLM Conversational Response Classifier")
 
-st.header("Making voicebots not suck")
+st.header("Making voicebots better")
 st.write("""
-Yes, we can talk to AI. Connecting a speech driven interface to AI is easy. 
+Yes, we can talk to AI. Connecting a speech driven interface to AI is easy. But crafting a conversational experience 
+that approaches the ease and pleasure of a human conversation is not.
 
-But crafting a conversational experience that approaches the ease and pleasure of a human conversation is hard.
+One reason for this is that today's speech recognition systems are not good at detecting the turn of a conversation. As humans, we're super good at this.  We continually process all sorts of cues during a conversation
+to determine when our partner has finished speaking.  For instance:
 
-One reason for this is that today's speech recognition systems are not good at detecting the turn of a conversation.
-
-As humans, we're super good at this.  We continually process all sorts of cues during a conversation
-to determine when our partner has indicated they are done speaking.  For instance:
-
-- our speaking partner asked us a question so we know it's time for us to respond (and think about how easy it is for us to 
+- she asked us a question so we know it's time for us to respond (and think about how easy it is for us to 
          distinguish a rhetorical question, which is not something we should respond to),
-- our speaking partner starts by saying "it's a long story.." and we settle in to wait longer for our turn to speak, or
-- our partner may pause during speech, but we know it is a "thinking" or a "bridge" pause with more to come ("Yeeeah.....well, it's not that simple, my friend")
+- she starts by saying "it's a long story.." and we settle in to wait longer for our turn to speak, or
+- she pauses during her speech, but we know it is a "thinking" or a "bridge" pause and we don't break in ("(long drawn-out) Yeeeah.....well, it's not that simple, my friend")
 
-In a conversation with AI the ASR will frequently return a fragment of what the user said, and when we feed that partial
-response to the AI the conversation is quickly derailed.  If on the other hand we simply wait an extra long time to be sure the user 
-has finished speaking, this creates a stilted conversation that is an even worse experience
+In a conversation with AI the speech recognition service will frequently return a fragment of what the user said as soon as it is confident that
+utterance is "final", and when we feed that partial response to the AI the conversation is utterly derailed.  If on the other hand we simply wait an extra long time to be sure the user 
+has finished speaking, we get a stilted conversation that is even worse.
 
-Lets' use AI to help us predict the turn of conversation.
+Question: can we use AI to help us predict the turns of the conversation?
 
 In this example, we use an LLM to predict the type of response a caller may make to a given statement or question from a voicebot.
-Based on that prediction we can then tune the ASR for this part of the conversation to give ourselves the best chance of collecting a full and
-meaningful response from the user efficiently.
+Based on that prediction we could then tune the speech recognizer specifically for this turn of the conversation ti improve the likelihood 
+of getting a fulsome response.
 """)
 
-st.session_state.prefix = """You are monitoring conversations in a call center between an agent and a customer.
-Your job is to listen to what the agent says and then predict the nature of the subsequent response from the customer.
+st.session_state.prefix = """You are monitoring conversations in a call center between an agent and a customer. Your job is to listen to what the agent says and then predict the nature of the subsequent response from the customer.
 
-You will then classify your prediction of the expected response from the customer as one of the following: 
-single utterance, single sentence, multiple sentences, or identification data.
-
-## Classification metric
+You will then classify your prediction of the expected response from the customer as one of the following: single utterance, single sentence, multiple sentences, or identification data.
 
 single utterance
 
@@ -46,7 +37,7 @@ Return this when the response is extremely likely to be only one or two words. G
 
 single sentence
 
-Return this when the response is likely to be short, but more than a single word or two.  Examples include when the expected response to the statement is a command or a short clarifying response to the agent's statement.  This response should also be returned if the agent just offered the customer a range of 2-5 options and the customer is expected to select one of them.
+Return this when the response is likely to be short, but more than a single word or two.  Examples include when the expected response is a command, a short clarifying response, or a selection of an option when several have been presented by the agent.
 
 multiple sentences
 
@@ -64,25 +55,20 @@ Return this any time the response is likely to spoken data for identification pu
 
 3. Keep in mind that agent and customer are speaking by phone and as such some shorthand may be used: i.e. "call" may mean "phone call" and "number" could mean "phone number".
 
-After performing these steps return the classification choice as an unformatted JSON format as an object with 'classification' and 'reason' properties.
+## Output
+
+After performing these steps return the classification choice as an unformatted JSON string with 'classification' and 'reason' properties.
 """
 
 
-st.session_state.examples = """statement: Would you like me to go ahead and book the flight for you?
-classification: single utterance
-reason: The agent is asking a yes/no question.  Since the flight is apparently ready to be booked, it implies that a lot of information such as departure city, time, and airline company have already been confirmed.  This sounds like a final prompt to simply confirm the customer wishes to proceed.
-
-statement: This call may be recorded for quality purposes.  Am I speaking to Thomas C. Jones of 59 Locust Lane?
-classification: single utterance
-reason: The agent is asking a simple yes/no question.
-
+st.session_state.examples = """
 statement: Thank you for reaching out to our support team. How can we assist you today?
 classification: multiple sentences
 reason: The agent has asked a very open-ended question.
 
 statement: Our technician has availability at 10AM, 2PM, or 4PM.  Would one of these times work for you?
 classification: single sentence
-reason: The agent has offered a small set of choices and is asking the customer to choose one.
+reason: The agent has offered a small set of choices and is asking the customer to select.
 
 statement: Please tell me the name of the patient requesting service
 classification: identification data
@@ -90,11 +76,7 @@ reason: The agent is asking the customer to speak a person's name, which is iden
 
 statement: Would you like me to initiate the return process for you?
 classification: single utterance
-reason: The agent has asked a yes/no question.
-
-statement: Can you tell me the day and month of your birth?
-classification: identification data
-reason: The agent has asked the customer to speak parts of a date, which is identification data.
+reason: The agent has asked a simple yes/no question.
 
 statement: I'd be happy to book a flight for you, provide the status of a flight, or answer other questions you may have.  What can I do for you today?
 classification: single sentence

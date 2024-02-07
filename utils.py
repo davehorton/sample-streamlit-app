@@ -1,5 +1,4 @@
 import os
-import random
 import streamlit as st
 from PIL import Image
 
@@ -46,12 +45,12 @@ def display_msg(msg, author):
 
 def configure_openai_api_key():
 
-    st.sidebar.image("Jambonz_Appicon.png", width=300)
+    ##st.sidebar.image("Jambonz_Appicon.png", width=300)
     # Open the image
-    image = Image.open("Jambonz_Appicon.png")
+    ##image = Image.open("Jambonz_Appicon.png")
 
     # Resize the image
-    new_image = image.resize((300, 300))
+    ##new_image = image.resize((300, 300))
 
     # Display the resized image in the sidebar
 #    st.sidebar.image(new_image, width=300)
