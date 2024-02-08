@@ -23,8 +23,10 @@ has finished speaking, we get a stilted conversation that is even worse.
 Question: can we use AI to help us predict the turns of the conversation?
 
 In this example, we use an LLM to predict the type of response a caller may make to a given statement or question from a voicebot.
-Based on that prediction we could then tune the speech recognizer specifically for this turn of the conversation ti improve the likelihood 
-of getting a fulsome response.
+Based on that prediction we could then tune the speech recognizer specifically for this turn of the conversation to improve the likelihood 
+of getting a complete and meaningful infput from the caller.
+         
+_Click "Try it out!" from the menu to test it, and feel free to substitute your own prompts and few-shot examples to see if you can improve the results!_
 """)
 
 st.session_state.prefix = """You are monitoring conversations in a call center between an agent and a customer. Your job is to listen to what the agent says and then predict the nature of the subsequent response from the customer.
