@@ -12,7 +12,7 @@ One reason for this is that today's speech recognition systems are not good at d
 to determine when our partner has finished speaking.  For instance:
 
 - she asked us a question so we know it's time for us to respond (and think about how easy it is for us to 
-         distinguish a rhetorical question, which is not something we should respond to),
+         distinguish a rhetorical question, which is not something we should **not** respond to),
 - she starts by saying "it's a long story.." and we settle in to wait longer for our turn to speak, or
 - she pauses during her speech, but we know it is a "thinking" or a "bridge" pause and we don't break in ("(long drawn-out) Yeeeah.....well, it's not that simple, my friend")
 
